@@ -27,7 +27,7 @@ const PersonForm = ({ submit, name, changeName, number, changeNumber }) => {
   )
 }
 
-const Persons = ({ persons, filter }) => {
+const Persons = ({ persons, filter, deletePerson }) => {
   return (
     <ul>
       {persons
@@ -37,6 +37,7 @@ const Persons = ({ persons, filter }) => {
         .map((person) => (
           <li key={person.name}>
             {person.name} {person.number}
+            <button onClick={() => deletePerson(person)}>delete</button>
           </li>
         ))}
     </ul>
@@ -91,6 +92,16 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const handleDelete = (person) => {
+    if (!confirm(`Delete ${person.name}?`)) {
+      return
+    }
+
+    personService.deletePerson(person.id).then(() => {
+      setPersons(persons.filter((p) => p.id !== person.id))
+    })
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -104,7 +115,7 @@ const App = () => {
         changeNumber={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} filter={filter} deletePerson={handleDelete} />
     </div>
   )
 }
