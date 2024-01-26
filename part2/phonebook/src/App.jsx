@@ -44,11 +44,24 @@ const Persons = ({ persons, filter, deletePerson }) => {
   )
 }
 
+const Notification = ({ notification }) => {
+  if (notification === null) {
+    return null
+  }
+
+  return (
+    <div className={`notification ${notification.type}`}>
+      {notification.message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     personService.getAll().then((response) => {
@@ -83,6 +96,13 @@ const App = () => {
       setPersons(persons.concat(response.data))
       setNewName('')
       setNewNumber('')
+      setNotification({
+        message: `Added ${response.data.name}`,
+        type: 'success',
+      })
+      setTimeout(() => {
+        setNotification(null)
+      }, 3000)
     })
   }
 
@@ -108,6 +128,10 @@ const App = () => {
 
     personService.remove(person.id).then(() => {
       setPersons(persons.filter((p) => p.id !== person.id))
+      setNotification({ message: `Deleted ${person.name}`, type: 'success' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 2000)
     })
   }
 
@@ -116,12 +140,20 @@ const App = () => {
       setPersons(persons.map((p) => (p.id !== person.id ? p : response.data)))
       setNewName('')
       setNewNumber('')
+      setNotification({
+        message: `Updated ${response.data.name}`,
+        type: 'success',
+      })
+      setTimeout(() => {
+        setNotification(null)
+      }, 3000)
     })
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification} />
       <Filter filter={filter} change={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm
