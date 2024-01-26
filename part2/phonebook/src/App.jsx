@@ -136,18 +136,29 @@ const App = () => {
   }
 
   const updatePerson = (person) => {
-    personService.update(person.id, person).then((response) => {
-      setPersons(persons.map((p) => (p.id !== person.id ? p : response.data)))
-      setNewName('')
-      setNewNumber('')
-      setNotification({
-        message: `Updated ${response.data.name}`,
-        type: 'success',
+    personService
+      .update(person.id, person)
+      .then((response) => {
+        setPersons(persons.map((p) => (p.id !== person.id ? p : response.data)))
+        setNewName('')
+        setNewNumber('')
+        setNotification({
+          message: `Updated ${response.data.name}`,
+          type: 'success',
+        })
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
       })
-      setTimeout(() => {
-        setNotification(null)
-      }, 3000)
-    })
+      .catch((error) => {
+        setNotification({
+          message: `Information of ${person.name} has already been removed from the server.`,
+          type: 'error',
+        })
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
+      })
   }
 
   return (
