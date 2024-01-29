@@ -26,14 +26,17 @@ function CountryDetails({ country }) {
   )
 }
 
-function FilteredCountries({ filteredCountries }) {
+function FilteredCountries({ filteredCountries, show }) {
   if (filteredCountries.length === 1) {
     return <CountryDetails country={filteredCountries[0]} />
   }
 
   if (filteredCountries.length <= 10) {
     return filteredCountries.map((country) => (
-      <div key={country.cca3}>{country.name.common}</div>
+      <div key={country.cca3}>
+        <span>{country.name.common}</span>
+        <button onClick={() => show(country.name.common)}>show</button>
+      </div>
     ))
   }
 
@@ -55,6 +58,10 @@ function App() {
     setInput(event.target.value)
   }
 
+  const handleShow = (countryName) => {
+    setInput(countryName)
+  }
+
   const filteredCountries = countries.filter((country) =>
     country.name.common.toLowerCase().includes(input.toLowerCase())
   )
@@ -62,7 +69,10 @@ function App() {
   return (
     <div>
       <CountryInput input={input} change={handleInputChange} />
-      <FilteredCountries filteredCountries={filteredCountries} />
+      <FilteredCountries
+        filteredCountries={filteredCountries}
+        show={handleShow}
+      />
     </div>
   )
 }
