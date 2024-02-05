@@ -20,12 +20,23 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-  var result = _(blogs).countBy('author').entries().maxBy(_.last)
-  if (!result) return {}
+  if (!blogs.length) return {}
+  const result = _(blogs).countBy('author').entries().maxBy(_.last)
   return {
     author: result[0],
     blogs: result[1],
   }
+}
+
+const mostLikes = (blogs) => {
+  if (!blogs.length) return {}
+  const groupedByAuthor = _.groupBy(blogs, 'author')
+  const likes = []
+  _.forOwn(groupedByAuthor, (blogs, author) => {
+    likes.push({ author, likes: totalLikes(blogs) })
+  })
+  const result = _.maxBy(likes, 'likes')
+  return result
 }
 
 module.exports = {
@@ -33,4 +44,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 }
