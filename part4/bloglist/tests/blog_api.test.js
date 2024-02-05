@@ -68,6 +68,22 @@ test('blog without likes will have 0 likes', async () => {
   expect(response.body.likes).toEqual(0)
 })
 
+test('blog without title cannot be created', async () => {
+  const newBlog = {
+    author: 'Test Author',
+    url: 'test.url',
+  }
+  await api.post('/api/blogs').send(newBlog).expect(400)
+})
+
+test('blog without url cannot be created', async () => {
+  const newBlog = {
+    title: 'Test Title',
+    author: 'Test Author',
+  }
+  await api.post('/api/blogs').send(newBlog).expect(400)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
