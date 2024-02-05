@@ -20,8 +20,12 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-  const result = _.countBy(blogs, 'author')
-  console.log(result)
+  var result = _(blogs).countBy('author').entries().maxBy(_.last)
+  if (!result) return {}
+  return {
+    author: result[0],
+    blogs: result[1],
+  }
 }
 
 module.exports = {
