@@ -80,8 +80,33 @@ describe('total likes', () => {
     expect(result).toBe(7)
   })
 
-  test('when list several blog, equals the likes the sum', () => {
+  test('when list several blogs, equals the likes the sum', () => {
     const result = listHelper.totalLikes(listWithManyBlogs)
     expect(result).toBe(36)
+  })
+})
+
+describe('favorite blog', () => {
+  test('of empty list is empty object', () => {
+    const result = listHelper.favoriteBlog(emptyList)
+    expect(result).toEqual({})
+  })
+
+  test('when list has only one blog, equals that blog', () => {
+    const result = listHelper.favoriteBlog(listWithOneBlog)
+    expect(result).toEqual({
+      title: 'React patterns',
+      author: 'Michael Chan',
+      likes: 7,
+    })
+  })
+
+  test('when list has several blogs, equals the most liked blog', () => {
+    const result = listHelper.favoriteBlog(listWithManyBlogs)
+    expect(result).toEqual({
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
+      likes: 12,
+    })
   })
 })
