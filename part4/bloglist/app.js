@@ -1,6 +1,7 @@
 const config = require('./utils/config')
 const logger = require('./utils/logger')
 const blogsController = require('./controllers/blogs')
+const usersController = require('./controllers/users')
 
 const express = require('express')
 const app = express()
@@ -23,5 +24,6 @@ mongoose
 app.use(cors())
 app.use(express.json())
 app.use('/api/blogs', blogsController)
+app.use('/api/users', usersController)
 
 module.exports = app
