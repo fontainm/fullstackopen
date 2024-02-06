@@ -3,6 +3,7 @@ const logger = require('./utils/logger')
 require('express-async-errors')
 const blogsController = require('./controllers/blogs')
 const usersController = require('./controllers/users')
+const loginController = require('./controllers/login')
 
 const middleware = require('./utils/middleware')
 const express = require('express')
@@ -29,6 +30,7 @@ app.use(middleware.requestLogger)
 
 app.use('/api/blogs', blogsController)
 app.use('/api/users', usersController)
+app.use('/api/login', loginController)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
