@@ -67,6 +67,17 @@ test('blog without url cannot be created', async () => {
   await api.post('/api/blogs').send(newBlog).expect(400)
 })
 
+describe('updating a blog', () => {
+  test('succeeds with status code 200 if input is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    blogToUpdate.likes = 100
+    const response = await api.put(`/api/blogs/${blogToUpdate.id}`).send(blogToUpdate)
+    expect(response.body.likes).toEqual(100)
+    expect(response.status).toBe(200)
+  })
+})
+
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
