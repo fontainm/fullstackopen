@@ -8,7 +8,8 @@ content-type: application/json
     "title": "DELETE Blogpost",
     "author": "Mathias",
     "url": "https://www.google.com",
-    "likes": 27
+    "likes": 27,
+    "user": "65c1f8880ec7dca9575940ab"
 }
 
 ###
