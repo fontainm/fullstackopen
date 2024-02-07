@@ -27,6 +27,7 @@ mongoose
 app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
+app.use(middleware.tokenExtractor)
 
 app.use('/api/blogs', blogsController)
 app.use('/api/users', usersController)
