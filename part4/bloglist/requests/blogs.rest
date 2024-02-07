@@ -3,14 +3,13 @@ GET http://localhost:3003/api/blogs
 ###
 POST http://localhost:3003/api/blogs
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOiI2NWMzMzZhOWJkNzdjNGI3YmNmZGU1MDAiLCJpYXQiOjE3MDcyOTIzMzV9.J0moeq-iX43uGFhH96JKPoO7wDusk0Rpycd1Day-1W4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFBQSIsImlkIjoiNjVjMzNiNTM3ZjI5MDY4MGM2MGY1YzE3IiwiaWF0IjoxNzA3MjkzNTM4fQ.VbNP_QafG9JS6PW0mk_HNyDelLiLijLCeDLgFjwP9pU
 
 {
-    "title": "NEW Blogpost",
-    "author": "Mathias",
+    "title": "PLEASE DELETE 5",
+    "author": "AAA",
     "url": "https://www.google.com",
-    "likes": 27,
-    "user": "65c1f8880ec7dca9575940ab"
+    "likes": 27
 }
 
 ###
@@ -22,4 +21,5 @@ content-type: application/json
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/65bf918df8d7fff0b9ad7084
+DELETE http://localhost:3003/api/blogs/65c33c5e0599b60054fdaeef
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFBQSIsImlkIjoiNjVjMzNiNTM3ZjI5MDY4MGM2MGY1YzE3IiwiaWF0IjoxNzA3MjkzNTM4fQ.VbNP_QafG9JS6PW0mk_HNyDelLiLijLCeDLgFjwP9pU
