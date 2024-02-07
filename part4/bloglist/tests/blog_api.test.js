@@ -8,7 +8,7 @@ const User = require('../models/user')
 
 beforeEach(async () => {
   await User.deleteMany({})
-  await User.insertMany(helper.initialUsers)
+  await api.post('/api/users').send(helper.initialUsers[0])
   await Blog.deleteMany({})
   await Blog.insertMany(helper.initialBlogs)
 })
@@ -30,6 +30,10 @@ describe('viewing blogs', () => {
 })
 
 describe('creating a blog', () => {
+  test('fails if token is not provided', async () => {
+    await api.post('/api/blogs').send({}).expect(401)
+  })
+
   test('blog can be created', async () => {
     const blogsBefore = await api.get('/api/blogs')
     expect(blogsBefore.body).toHaveLength(2)
@@ -41,14 +45,14 @@ describe('creating a blog', () => {
       likes: 5,
     }
 
-    // const loginResponse = await api.post('/api/login').send({
-    //   username: 'user1',
-    //   password: 'user1',
-    // })
+    const loginResponse = await api.post('/api/login').send({
+      username: 'user1',
+      password: 'user1',
+    })
 
     const response = await api
       .post('/api/blogs')
-      // .set('Authorization', 'Bearer 214')
+      .set('Authorization', `Bearer ${loginResponse.body.token}`)
       .send(newBlog)
     expect(response.body.id).toBeDefined()
 
@@ -62,7 +66,16 @@ describe('creating a blog', () => {
       title: 'Test Title',
       url: 'test.url',
     }
-    const response = await api.post('/api/blogs').send(newBlog)
+
+    const loginResponse = await api.post('/api/login').send({
+      username: 'user1',
+      password: 'user1',
+    })
+
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${loginResponse.body.token}`)
+      .send(newBlog)
     expect(response.body.likes).toEqual(0)
   })
 
@@ -71,7 +84,17 @@ describe('creating a blog', () => {
       author: 'Test Author',
       url: 'test.url',
     }
-    await api.post('/api/blogs').send(newBlog).expect(400)
+
+    const loginResponse = await api.post('/api/login').send({
+      username: 'user1',
+      password: 'user1',
+    })
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${loginResponse.body.token}`)
+      .send(newBlog)
+      .expect(400)
   })
 
   test('blog without url cannot be created', async () => {
@@ -79,7 +102,17 @@ describe('creating a blog', () => {
       title: 'Test Title',
       author: 'Test Author',
     }
-    await api.post('/api/blogs').send(newBlog).expect(400)
+
+    const loginResponse = await api.post('/api/login').send({
+      username: 'user1',
+      password: 'user1',
+    })
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${loginResponse.body.token}`)
+      .send(newBlog)
+      .expect(400)
   })
 })
 
@@ -98,9 +131,29 @@ describe('updating a blog', () => {
 
 describe('deleting a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+    const loginResponse = await api.post('/api/login').send({
+      username: 'user1',
+      password: 'user1',
+    })
+
+    const newBlog = {
+      author: 'Test Author',
+      title: 'Test Title',
+      url: 'test.url',
+      likes: 5,
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${loginResponse.body.token}`)
+      .send(newBlog)
+
+    const blogToDelete = response.body
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${loginResponse.body.token}`)
+      .expect(204)
   })
 })
 
