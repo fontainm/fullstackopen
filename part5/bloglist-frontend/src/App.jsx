@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Toggleable from './components/Toggleable'
+import BlogForm from './components/BlogForm'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -14,10 +15,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   const blogFormRef = useRef()
 
@@ -62,37 +59,7 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
       <Toggleable buttonLabel="create blog" ref={blogFormRef}>
-        <h2>create new</h2>
-        <form onSubmit={handleCreate}>
-          <div>
-            title
-            <input
-              type="text"
-              value={title}
-              name="Title"
-              onChange={({ target }) => setTitle(target.value)}
-            />
-          </div>
-          <div>
-            author
-            <input
-              type="text"
-              value={author}
-              name="Author"
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-          </div>
-          <div>
-            url
-            <input
-              type="text"
-              value={url}
-              name="URL"
-              onChange={({ target }) => setUrl(target.value)}
-            />
-          </div>
-          <button type="submit">create</button>
-        </form>
+        <BlogForm createBlog={addBlog} />
       </Toggleable>
     </>
   )
@@ -146,19 +113,10 @@ const App = () => {
     window.localStorage.removeItem('blogUser')
   }
 
-  const handleCreate = async (event) => {
-    event.preventDefault()
+  const addBlog = async (blogObject) => {
     try {
-      const newBlog = {
-        title,
-        author,
-        url,
-      }
-      const response = await blogService.create(newBlog)
+      const response = await blogService.create(blogObject)
       setBlogs(blogs.concat(response))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
       blogFormRef.current.toggleVisibility()
       showNotification({
         message: `New blog added: ${response.title} by ${response.author}`,
