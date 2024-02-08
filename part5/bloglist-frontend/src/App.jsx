@@ -68,7 +68,7 @@ const App = () => {
     <>
       <h2>blogs</h2>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
       ))}
     </>
   )
@@ -124,6 +124,23 @@ const App = () => {
       })
     } catch (exception) {
       showNotification({ message: 'Adding new blog failed', type: 'error' })
+    }
+  }
+
+  const updateBlog = async (blogObject) => {
+    try {
+      blogObject.user = blogObject.user.id
+      const response = await blogService.update(blogObject.id, blogObject)
+      const blogToUpdate = blogs.findIndex((blog) => blog.id == response.id)
+      const newBlogs = blogs
+      newBlogs[blogToUpdate] = response
+      setBlogs(newBlogs)
+      showNotification({
+        message: `Blog liked`,
+        type: 'success',
+      })
+    } catch (exception) {
+      showNotification({ message: 'Liking blog failed', type: 'error' })
     }
   }
 

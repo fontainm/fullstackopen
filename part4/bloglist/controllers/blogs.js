@@ -32,10 +32,11 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
-blogsRouter.put('/:id', async (request, response) => {
-  const result = await Blog.findByIdAndUpdate(request.params.id, request.body, {
+blogsRouter.put('/:id', middleware.userExtractor, async (request, response) => {
+  let result = await Blog.findByIdAndUpdate(request.params.id, request.body, {
     new: true,
   })
+  result.user = request.user
   response.json(result)
 })
 
