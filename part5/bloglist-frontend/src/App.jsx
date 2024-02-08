@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react'
+
 import Blog from './components/Blog'
+import Notification from './components/Notification'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
+  const [notification, setNotification] = useState('')
+
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -12,6 +17,13 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const showNotification = ({ message, type }) => {
+    setNotification({ message, type })
+    setTimeout(() => {
+      setNotification(null)
+    }, 3000)
+  }
 
   const loginForm = () => (
     <>
@@ -116,10 +128,11 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      const message = exception.response?.data?.error
+      showNotification({
+        message: message ?? 'Wrong credentials',
+        type: 'error',
+      })
     }
   }
 
@@ -131,7 +144,6 @@ const App = () => {
 
   const handleCreate = async (event) => {
     event.preventDefault()
-    console.log('create', title, author, url)
     try {
       const newBlog = {
         title,
@@ -140,16 +152,21 @@ const App = () => {
       }
       const response = await blogService.create(newBlog)
       setBlogs(blogs.concat(response))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      showNotification({
+        message: `New blog added: ${response.title} by ${response.author}`,
+        type: 'success',
+      })
     } catch (exception) {
-      setErrorMessage('Invalid')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      showNotification({ message: 'Adding new blog failed', type: 'error' })
     }
   }
 
   return (
     <div>
+      <Notification notification={notification} />
       {user === null ? loginForm() : blogForm()}
       {blogList()}
     </div>
