@@ -26,6 +26,10 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   })
 
   const savedBlog = await blog.save()
+  await savedBlog.populate('user', {
+    username: 1,
+    name: 1,
+  })
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
@@ -40,24 +44,28 @@ blogsRouter.put('/:id', middleware.userExtractor, async (request, response) => {
   response.json(result)
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
-  const user = request.user
-  const blog = await Blog.findById(request.params.id)
+blogsRouter.delete(
+  '/:id',
+  middleware.userExtractor,
+  async (request, response) => {
+    const user = request.user
+    const blog = await Blog.findById(request.params.id)
 
-  if (!user) {
-    return response.status(400).json({ error: 'user not found' })
+    if (!user) {
+      return response.status(400).json({ error: 'user not found' })
+    }
+
+    if (!blog) {
+      return response.status(400).json({ error: 'blog not found' })
+    }
+
+    if (blog.user.toString() !== user.id.toString()) {
+      return response.status(400).json({ error: 'token invalid' })
+    }
+
+    await blog.deleteOne()
+    return response.status(204).end()
   }
-
-  if (!blog) {
-    return response.status(400).json({ error: 'blog not found' })
-  }
-
-  if (blog.user.toString() !== user.id.toString()) {
-    return response.status(400).json({ error: 'token invalid' })
-  }
-
-  await blog.deleteOne()
-  return response.status(204).end()
-})
+)
 
 module.exports = blogsRouter

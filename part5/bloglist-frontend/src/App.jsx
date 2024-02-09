@@ -70,7 +70,13 @@ const App = () => {
       {blogs
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            updateBlog={updateBlog}
+            removeBlog={removeBlog}
+            user={user}
+          />
         ))}
     </>
   )
@@ -143,6 +149,16 @@ const App = () => {
       })
     } catch (exception) {
       showNotification({ message: 'Liking blog failed', type: 'error' })
+    }
+  }
+
+  const removeBlog = async (blogId) => {
+    try {
+      await blogService.remove(blogId)
+      setBlogs(blogs.filter((blog) => blog.id != blogId))
+      showNotification({ message: 'Deleting blog successful', type: 'success' })
+    } catch (exception) {
+      showNotification({ message: 'Deleting blog failed', type: 'error' })
     }
   }
 
