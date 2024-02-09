@@ -139,12 +139,12 @@ const App = () => {
     try {
       blogObject.user = blogObject.user.id
       const response = await blogService.update(blogObject.id, blogObject)
-      const blogToUpdate = blogs.findIndex((blog) => blog.id == response.id)
+      const blogToUpdate = blogs.findIndex((blog) => blog.id === response.id)
       const newBlogs = blogs
       newBlogs[blogToUpdate] = response
       setBlogs(newBlogs)
       showNotification({
-        message: `Blog liked`,
+        message: 'Blog liked',
         type: 'success',
       })
     } catch (exception) {
@@ -155,7 +155,7 @@ const App = () => {
   const removeBlog = async (blogId) => {
     try {
       await blogService.remove(blogId)
-      setBlogs(blogs.filter((blog) => blog.id != blogId))
+      setBlogs(blogs.filter((blog) => blog.id !== blogId))
       showNotification({ message: 'Deleting blog successful', type: 'success' })
     } catch (exception) {
       showNotification({ message: 'Deleting blog failed', type: 'error' })
