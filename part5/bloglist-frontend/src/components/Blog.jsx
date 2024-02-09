@@ -24,31 +24,26 @@ const Blog = ({ blog, updateBlog, removeBlog, user }) => {
       removeBlog(blog.id)
   }
 
-  if (!blogVisible) {
-    return (
-      <div style={blogStyle}>
-        <div>
-          {blog.title}
-          <button onClick={() => setBlogVisible(true)}>view</button>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div style={blogStyle} className='blog'>
+    <div style={blogStyle}>
       <div>
         Title: {blog.title}
-        <button onClick={() => setBlogVisible(false)}>hide</button>
+        <button onClick={() => setBlogVisible(!blogVisible)}>
+          {blogVisible ? 'close' : 'view'}
+        </button>
       </div>
-      <div>URL: {blog.url}</div>
-      <div>
-        likes {blog.likes} <button onClick={likeBlog}>like</button>
-      </div>
-      <div>Author: {blog.author}</div>
-      <div>Username: {blog.user.name}</div>
-      {blog.user.name === user.name ? (
-        <button onClick={deleteBlog}>remove</button>
+      {blogVisible ? (
+        <>
+          <div>URL: {blog.url}</div>
+          <div>
+            likes {blog.likes} <button onClick={likeBlog}>like</button>
+          </div>
+          <div>Author: {blog.author}</div>
+          <div>Username: {blog.user.name}</div>
+          {blog.user.name === user.name ? (
+            <button onClick={deleteBlog}>remove</button>
+          ) : null}
+        </>
       ) : null}
     </div>
   )
