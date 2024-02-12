@@ -90,11 +90,6 @@ describe('Bloglist app', function () {
           author: 'Test User',
           url: 'Test URL 2',
         })
-        cy.createBlog({
-          title: 'Test Title 3',
-          author: 'Test User',
-          url: 'Test URL 3',
-        })
         cy.logout()
         cy.login({ username: 'west', password: 'west' })
         cy.createBlog({
@@ -117,6 +112,15 @@ describe('Bloglist app', function () {
           .and('have.css', 'border-style', 'solid')
 
         cy.contains('Adam Wests Blog').should('not.exist')
+      })
+
+      it('a blog cannot be deleted by another user', function () {
+        cy.contains('Test Title 2').contains('view').click()
+        cy.contains('Test Title 2')
+          .parent()
+          .find('button')
+          .contains('remove')
+          .should('not.exist')
       })
     })
   })
