@@ -6,7 +6,13 @@ describe('Bloglist app', function () {
       username: 'test',
       password: 'test',
     }
+    const user2 = {
+      name: 'Adam West',
+      username: 'west',
+      password: 'west',
+    }
     cy.request('POST', 'http://localhost:3003/api/users/', user)
+    cy.request('POST', 'http://localhost:3003/api/users/', user2)
     cy.visit('http://localhost:5173')
   })
 
@@ -69,6 +75,48 @@ describe('Bloglist app', function () {
           .and('have.css', 'color', 'rgb(0, 128, 0)')
           .and('have.css', 'border-style', 'solid')
         cy.get('#likes').should('contain', 1)
+      })
+    })
+
+    describe('and several blogs exists', function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: 'Test Title 1',
+          author: 'Test User',
+          url: 'Test URL 1',
+        })
+        cy.createBlog({
+          title: 'Test Title 2',
+          author: 'Test User',
+          url: 'Test URL 2',
+        })
+        cy.createBlog({
+          title: 'Test Title 3',
+          author: 'Test User',
+          url: 'Test URL 3',
+        })
+        cy.logout()
+        cy.login({ username: 'west', password: 'west' })
+        cy.createBlog({
+          title: 'Adam Wests Blog',
+          author: 'Test User',
+          url: 'Adam URL',
+        })
+      })
+
+      it('a blog can by deleted by the creator', function () {
+        cy.contains('Adam Wests Blog').contains('view').click()
+        cy.contains('Adam Wests Blog')
+          .parent()
+          .find('button')
+          .contains('remove')
+          .click()
+        cy.get('.notification.success')
+          .should('contain', 'Deleting blog successful')
+          .and('have.css', 'color', 'rgb(0, 128, 0)')
+          .and('have.css', 'border-style', 'solid')
+
+        cy.contains('Adam Wests Blog').should('not.exist')
       })
     })
   })

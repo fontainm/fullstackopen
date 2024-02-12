@@ -34,6 +34,11 @@ Cypress.Commands.add('login', ({ username, password }) => {
   })
 })
 
+Cypress.Commands.add('logout', () => {
+  localStorage.removeItem('blogUser')
+  cy.visit('http://localhost:5173')
+})
+
 Cypress.Commands.add('createBlog', ({ title, author, url, likes }) => {
   const user = JSON.parse(localStorage.getItem('blogUser'))
   cy.request({
