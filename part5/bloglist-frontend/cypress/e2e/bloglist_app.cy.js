@@ -51,5 +51,25 @@ describe('Bloglist app', function () {
       cy.contains('Title: Test Title')
       cy.contains('view')
     })
+
+    describe('and a blog exists', function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: 'Test Title',
+          author: 'Test User',
+          url: 'Test URL',
+        })
+      })
+
+      it('it can be liked', function () {
+        cy.contains('view').click()
+        cy.contains('like').click()
+        cy.get('.notification.success')
+          .should('contain', 'Blog liked')
+          .and('have.css', 'color', 'rgb(0, 128, 0)')
+          .and('have.css', 'border-style', 'solid')
+        cy.get('#likes').should('contain', 1)
+      })
+    })
   })
 })
