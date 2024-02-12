@@ -25,24 +25,24 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('login', ({ username, password }) => {
-  cy.request('POST', 'http://localhost:3003/api/login', {
+  cy.request('POST', `${Cypress.env('BACKEND')}/login`, {
     username,
     password,
   }).then(({ body }) => {
     localStorage.setItem('blogUser', JSON.stringify(body))
-    cy.visit('http://localhost:5173')
+    cy.visit('')
   })
 })
 
 Cypress.Commands.add('logout', () => {
   localStorage.removeItem('blogUser')
-  cy.visit('http://localhost:5173')
+  cy.visit('')
 })
 
 Cypress.Commands.add('createBlog', ({ title, author, url, likes }) => {
   const user = JSON.parse(localStorage.getItem('blogUser'))
   cy.request({
-    url: 'http://localhost:3003/api/blogs',
+    url: `${Cypress.env('BACKEND')}/blogs`,
     method: 'POST',
     body: { title, author, url, likes, user },
     headers: {
@@ -50,5 +50,12 @@ Cypress.Commands.add('createBlog', ({ title, author, url, likes }) => {
     },
   })
 
-  cy.visit('http://localhost:5173')
+  cy.visit('')
+})
+
+Cypress.Commands.add('likeBlog', (title) => {
+  cy.visit('')
+  cy.contains(title).contains('view').click()
+  cy.contains(title).parent().find('button').contains('like').click()
+  cy.wait(500)
 })
