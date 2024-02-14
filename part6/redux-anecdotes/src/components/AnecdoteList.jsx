@@ -13,9 +13,10 @@ const AnecdoteList = () => {
   })
   const dispatch = useDispatch()
   const vote = (id) => {
-    dispatch(voteAnecdote(id))
-    const anecdoteToChange = anecdotes.findIndex((a) => a.id === id)
-    const content = anecdotes[anecdoteToChange].content
+    const anecdoteToChangeIndex = anecdotes.findIndex((a) => a.id === id)
+    const anecdoteToChange = anecdotes[anecdoteToChangeIndex]
+    dispatch(voteAnecdote(id, anecdoteToChange))
+    const content = anecdoteToChange.content
     dispatch(showNotification(`Voted for '${content}'`))
     setTimeout(() => dispatch(hideNotification()), 5000)
   }
