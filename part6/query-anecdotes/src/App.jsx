@@ -1,20 +1,14 @@
+import { useContext } from 'react'
+import NotificationContext from './NotificationContext'
+
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 
 import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query'
 import { getAnecdotes, updateAnecdote } from './requests'
 
-import { useReducer } from 'react'
-
-const notificationReducer = (state, action) => {
-  return action
-}
-
 const App = () => {
-  const [notification, notificationDispatch] = useReducer(
-    notificationReducer,
-    ''
-  )
+  const [notification, notificationDispatch] = useContext(NotificationContext)
 
   const queryClient = useQueryClient()
 
@@ -43,7 +37,6 @@ const App = () => {
   const anecdotes = result.data
 
   const handleVote = (anecdote) => {
-    console.log('vote')
     updateNoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
     notificationDispatch(`Voted for '${anecdote.content}'`)
     setTimeout(() => {
@@ -55,8 +48,8 @@ const App = () => {
     <div>
       <h3>Anecdote app</h3>
 
-      <Notification notification={notification} />
-      <AnecdoteForm dispatch={notificationDispatch} />
+      <Notification />
+      <AnecdoteForm />
 
       {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
