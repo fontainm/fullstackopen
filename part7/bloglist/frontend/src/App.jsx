@@ -5,9 +5,6 @@ import Notification from './components/Notification'
 import Toggleable from './components/Toggleable'
 import BlogForm from './components/BlogForm'
 
-import blogService from './services/blogs'
-import loginService from './services/login'
-
 import {
   initializeBlogs,
   createBlog,
@@ -15,15 +12,20 @@ import {
   deleteBlog,
 } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
+import { loginUser, setUser, logoutUser } from './reducers/userReducer'
+
 import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   const blogs = useSelector((state) => {
     return state.blogs
+  })
+
+  const user = useSelector((state) => {
+    return state.user
   })
 
   const blogFormRef = useRef()
@@ -96,27 +98,22 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs())
-  }, [])
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('blogUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      dispatch(setUser(user))
     }
   }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
-        username,
-        password,
-      })
-      setUser(user)
-      window.localStorage.setItem('blogUser', JSON.stringify(user))
-      blogService.setToken(user.token)
+      dispatch(
+        loginUser({
+          username,
+          password,
+        })
+      )
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -130,8 +127,7 @@ const App = () => {
 
   const handleLogout = (event) => {
     event.preventDefault()
-    setUser(null)
-    window.localStorage.removeItem('blogUser')
+    dispatch(logoutUser())
   }
 
   const addBlog = async (blogObject) => {
@@ -150,11 +146,6 @@ const App = () => {
   const updateBlog = async (blogObject) => {
     try {
       blogObject.user = blogObject.user.id
-      // const response = await blogService.update(blogObject.id, blogObject)
-      // const blogToUpdate = blogs.findIndex((blog) => blog.id === response.id)
-      // const newBlogs = blogs
-      // newBlogs[blogToUpdate] = response
-      // setBlogs(newBlogs)
       dispatch(likeBlog(blogObject))
       showNotification({
         message: 'Blog liked',
