@@ -8,7 +8,12 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import {
+  initializeBlogs,
+  createBlog,
+  likeBlog,
+  deleteBlog,
+} from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -145,11 +150,12 @@ const App = () => {
   const updateBlog = async (blogObject) => {
     try {
       blogObject.user = blogObject.user.id
-      const response = await blogService.update(blogObject.id, blogObject)
-      const blogToUpdate = blogs.findIndex((blog) => blog.id === response.id)
-      const newBlogs = blogs
-      newBlogs[blogToUpdate] = response
+      // const response = await blogService.update(blogObject.id, blogObject)
+      // const blogToUpdate = blogs.findIndex((blog) => blog.id === response.id)
+      // const newBlogs = blogs
+      // newBlogs[blogToUpdate] = response
       // setBlogs(newBlogs)
+      dispatch(likeBlog(blogObject))
       showNotification({
         message: 'Blog liked',
         type: 'success',
@@ -161,8 +167,7 @@ const App = () => {
 
   const removeBlog = async (blogId) => {
     try {
-      await blogService.remove(blogId)
-      // setBlogs(blogs.filter((blog) => blog.id !== blogId))
+      dispatch(deleteBlog(blogId))
       showNotification({ message: 'Deleting blog successful', type: 'success' })
     } catch (exception) {
       showNotification({ message: 'Deleting blog failed', type: 'error' })
