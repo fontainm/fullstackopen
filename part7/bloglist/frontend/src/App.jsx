@@ -1,9 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Toggleable from './components/Toggleable'
 import BlogForm from './components/BlogForm'
+import UserInfo from './components/UserInfo'
+import UsersInfo from './components/UsersInfo'
 
 import {
   initializeBlogs,
@@ -12,14 +14,11 @@ import {
   deleteBlog,
 } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
-import { loginUser, setUser, logoutUser } from './reducers/userReducer'
+import { setUser } from './reducers/userReducer'
 
 import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-
   const blogs = useSelector((state) => {
     return state.blogs
   })
@@ -36,43 +35,8 @@ const App = () => {
     dispatch(setNotification(message, type, 5))
   }
 
-  const loginForm = () => (
-    <>
-      <h2>Log in to application</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            id="username"
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            id="password"
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button id="login-button" type="submit">
-          login
-        </button>
-      </form>
-    </>
-  )
-
   const blogForm = () => (
     <>
-      <p>
-        {user.name} logged in
-        <button onClick={handleLogout}>logout</button>
-      </p>
       <Toggleable buttonLabel="create blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} user={user} />
       </Toggleable>
@@ -104,31 +68,6 @@ const App = () => {
       dispatch(setUser(user))
     }
   }, [])
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      dispatch(
-        loginUser({
-          username,
-          password,
-        })
-      )
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      const message = exception.response?.data?.error
-      showNotification({
-        message: message ?? 'Wrong credentials',
-        type: 'error',
-      })
-    }
-  }
-
-  const handleLogout = (event) => {
-    event.preventDefault()
-    dispatch(logoutUser())
-  }
 
   const addBlog = async (blogObject) => {
     try {
@@ -168,8 +107,10 @@ const App = () => {
   return (
     <div>
       <Notification />
-      {user === null ? loginForm() : blogForm()}
+      <UserInfo />
+      {user !== null ? blogForm() : null}
       {blogList()}
+      {<UsersInfo />}
     </div>
   )
 }
