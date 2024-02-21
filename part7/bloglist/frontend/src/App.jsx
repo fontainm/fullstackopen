@@ -8,9 +8,10 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-const App = () => {
-  const [notification, setNotification] = useState('')
+import { setNotification } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
 
+const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -18,11 +19,10 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  const dispatch = useDispatch()
+
   const showNotification = ({ message, type }) => {
-    setNotification({ message, type })
-    setTimeout(() => {
-      setNotification(null)
-    }, 3000)
+    dispatch(setNotification(message, type, 5))
   }
 
   const loginForm = () => (
@@ -146,6 +146,7 @@ const App = () => {
       const blogToUpdate = blogs.findIndex((blog) => blog.id === response.id)
       const newBlogs = blogs
       newBlogs[blogToUpdate] = response
+      console.log(newBlogs)
       setBlogs(newBlogs)
       showNotification({
         message: 'Blog liked',
@@ -168,7 +169,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification notification={notification} />
+      <Notification />
       {user === null ? loginForm() : blogForm()}
       {blogList()}
     </div>
