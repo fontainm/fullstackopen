@@ -8,14 +8,18 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+import { initializeBlogs, createBlog } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+
+  const blogs = useSelector((state) => {
+    return state.blogs
+  })
 
   const blogFormRef = useRef()
 
@@ -72,7 +76,7 @@ const App = () => {
     <>
       <h2>blogs</h2>
       {blogs
-        .sort((a, b) => b.likes - a.likes)
+        // .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
           <Blog
             key={blog.id}
@@ -86,7 +90,7 @@ const App = () => {
   )
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
@@ -127,11 +131,10 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     try {
-      const response = await blogService.create(blogObject)
-      setBlogs(blogs.concat(response))
+      dispatch(createBlog(blogObject))
       blogFormRef.current.toggleVisibility()
       showNotification({
-        message: `New blog added: ${response.title} by ${response.author}`,
+        message: `New blog added: ${blogObject.title} by ${blogObject.author}`,
         type: 'success',
       })
     } catch (exception) {
@@ -146,8 +149,7 @@ const App = () => {
       const blogToUpdate = blogs.findIndex((blog) => blog.id === response.id)
       const newBlogs = blogs
       newBlogs[blogToUpdate] = response
-      console.log(newBlogs)
-      setBlogs(newBlogs)
+      // setBlogs(newBlogs)
       showNotification({
         message: 'Blog liked',
         type: 'success',
@@ -160,7 +162,7 @@ const App = () => {
   const removeBlog = async (blogId) => {
     try {
       await blogService.remove(blogId)
-      setBlogs(blogs.filter((blog) => blog.id !== blogId))
+      // setBlogs(blogs.filter((blog) => blog.id !== blogId))
       showNotification({ message: 'Deleting blog successful', type: 'success' })
     } catch (exception) {
       showNotification({ message: 'Deleting blog failed', type: 'error' })
