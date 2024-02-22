@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { Routes, Route, Link } from 'react-router-dom'
 
+import { Table } from 'react-bootstrap'
+
 const UsersInfo = () => {
   const dispatch = useDispatch()
 
@@ -18,7 +20,7 @@ const UsersInfo = () => {
   return (
     <>
       <h2>Users</h2>
-      <table>
+      <Table striped>
         <tbody>
           <tr>
             <th>Name</th>
@@ -34,7 +36,7 @@ const UsersInfo = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </>
   )
 }

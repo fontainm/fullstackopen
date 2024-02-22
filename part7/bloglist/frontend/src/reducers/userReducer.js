@@ -8,7 +8,7 @@ const userSlice = createSlice({
   initialState: null,
   reducers: {
     setUser(state, action) {
-      blogService.setToken(action.payload.token)
+      blogService.setToken(action.payload?.token)
       return action.payload
     },
   },

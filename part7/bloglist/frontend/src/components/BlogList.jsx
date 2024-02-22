@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import Blog from './Blog'
+import { Table } from 'react-bootstrap'
 
 const BlogList = () => {
   const blogs = useSelector((state) => {
@@ -8,12 +9,16 @@ const BlogList = () => {
 
   return (
     <>
-      <h2>blogs</h2>
-      {blogs
-        // .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
+      <h2>Blogs</h2>
+      <Table striped>
+        <tbody>
+          {blogs
+            // .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog key={blog.id} blog={blog} />
+            ))}
+        </tbody>
+      </Table>
     </>
   )
 }

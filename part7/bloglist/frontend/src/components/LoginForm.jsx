@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { loginUser, setUser, logoutUser } from '../reducers/userReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { loginUser } from '../reducers/userReducer'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')

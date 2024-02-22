@@ -9,6 +9,8 @@ import Header from './components/Header'
 import UsersInfo from './components/UsersInfo'
 import UserInfo from './components/UserInfo'
 import BlogInfo from './components/BlogInfo'
+import LoginForm from './components/LoginForm'
+import Home from './components/Home'
 
 import { initializeBlogs, createBlog } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
@@ -61,16 +63,19 @@ const App = () => {
 
   return (
     <Router>
-      <Header />
-      <Notification />
-      {user !== null ? blogForm() : null}
-      <Routes>
-        <Route path="/" />
-        <Route path="/blogs" element={<BlogList />} />
-        <Route path="/blogs/:id" element={<BlogInfo />} />
-        <Route path="/users" element={<UsersInfo />} />
-        <Route path="/users/:id" element={<UserInfo />} />
-      </Routes>
+      <div className="container">
+        <Header />
+        <Notification />
+        {user !== null ? blogForm() : null}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/blogs" element={<BlogList />} />
+          <Route path="/blogs/:id" element={<BlogInfo />} />
+          <Route path="/users" element={<UsersInfo />} />
+          <Route path="/users/:id" element={<UserInfo />} />
+        </Routes>
+      </div>
     </Router>
   )
 }

@@ -25,7 +25,7 @@ const UserInfo = () => {
       <h3>blogs added</h3>
       <ul>
         {user.blogs.map((blog) => (
-          <li>{blog.title}</li>
+          <li key={blog.id}>{blog.title}</li>
         ))}
       </ul>
     </>
