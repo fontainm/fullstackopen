@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { logoutUser } from '../reducers/userReducer'
 import { Link } from 'react-router-dom'
-import { Navbar, Nav } from 'react-bootstrap'
+import { Navbar, Nav, Button } from 'react-bootstrap'
 
 const Header = () => {
   const dispatch = useDispatch()
@@ -33,7 +33,7 @@ const Header = () => {
             {user ? (
               <>
                 <em> {user.name} logged in</em>
-                <button onClick={handleLogout}>logout</button>
+                <Button onClick={handleLogout}>logout</Button>
               </>
             ) : (
               <Link to="/login">Login</Link>

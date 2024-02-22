@@ -1,30 +1,49 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Button, Form } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
+import { setNotification } from '../reducers/notificationReducer'
+import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({ createBlog, user }) => {
+const BlogForm = ({ user }) => {
+  const dispatch = useDispatch()
+
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState(user.name)
   const [url, setUrl] = useState('')
 
   const addBlog = (event) => {
     event.preventDefault()
-    createBlog({
+    const blogObject = {
       title,
       author,
       url,
-    })
-    setTitle('')
-    setAuthor(user.name)
-    setUrl('')
+    }
+
+    try {
+      dispatch(createBlog(blogObject))
+      dispatch(
+        setNotification(
+          `New blog added: ${blogObject.title} by ${blogObject.author}`,
+          'success',
+          5
+        )
+      )
+      setTitle('')
+      setAuthor(user.name)
+      setUrl('')
+    } catch (exception) {
+      dispatch(setNotification('Adding new blog failed', 'danger', 5))
+    }
   }
 
   return (
     <>
       <h2>create new</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title
-          <input
+      <Form onSubmit={addBlog}>
+        <Form.Group>
+          <Form.Label>Title</Form.Label>
+          <Form.Control
             id="title"
             type="text"
             value={title}
@@ -32,10 +51,11 @@ const BlogForm = ({ createBlog, user }) => {
             placeholder="Title"
             onChange={({ target }) => setTitle(target.value)}
           />
-        </div>
-        <div>
-          author
-          <input
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Author</Form.Label>
+
+          <Form.Control
             id="author"
             type="text"
             value={author}
@@ -43,10 +63,10 @@ const BlogForm = ({ createBlog, user }) => {
             placeholder="Author"
             onChange={({ target }) => setAuthor(target.value)}
           />
-        </div>
-        <div>
-          url
-          <input
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>URL</Form.Label>
+          <Form.Control
             id="url"
             type="text"
             value={url}
@@ -54,17 +74,16 @@ const BlogForm = ({ createBlog, user }) => {
             placeholder="URL"
             onChange={({ target }) => setUrl(target.value)}
           />
-        </div>
-        <button id="create-button" type="submit">
+        </Form.Group>
+        <Button id="create-button" type="submit">
           create
-        </button>
-      </form>
+        </Button>
+      </Form>
     </>
   )
 }
 
 BlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
 }
 

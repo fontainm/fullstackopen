@@ -24,7 +24,7 @@ export const loginUser = (credentials) => {
       window.localStorage.setItem('blogUser', JSON.stringify(user))
     } catch (exception) {
       const message = exception.response?.data?.error ?? 'Wrong credentials'
-      dispatch(setNotification(message, 'error', 5))
+      dispatch(setNotification(message, 'danger', 5))
     }
   }
 }

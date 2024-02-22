@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { initializeUsers } from '../reducers/usersReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Routes, Route, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { Table } from 'react-bootstrap'
 
