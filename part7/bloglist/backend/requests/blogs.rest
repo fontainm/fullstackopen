@@ -30,5 +30,5 @@ POST http://localhost:3003/api/blogs/65c493dea1880a77323c6f88/comments
 content-type: application/json
 
 {
-    "content": "Third comment!"
+    "content": "Fourth comment!"
 } 

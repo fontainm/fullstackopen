@@ -1,12 +1,15 @@
+import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
-import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import { likeBlog, deleteBlog, commentBlog } from '../reducers/blogReducer'
 import { Form, Button } from 'react-bootstrap'
 
 const BlogInfo = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  const [comment, setComment] = useState('')
 
   const blogs = useSelector((state) => {
     return state.blogs
@@ -59,14 +62,15 @@ const BlogInfo = () => {
     dispatch(setNotification(message, type, 5))
   }
 
-  const addComment = (event) => {
+  const addComment = async (event) => {
     event.preventDefault()
-    console.log('OK')
     try {
-      const commentObject = {
-        content: 'OK',
-      }
-      dispatch(createComment(commentObject))
+      dispatch(commentBlog(blog, { content: comment }))
+      showNotification({
+        message: `Added comment: ${comment}`,
+        type: 'success',
+      })
+      setComment('')
     } catch (exception) {
       console.log(exception)
     }
@@ -98,7 +102,12 @@ const BlogInfo = () => {
         <Form onSubmit={addComment}>
           <Form.Group>
             <Form.Label>Content</Form.Label>
-            <Form.Control type="text" name="Content" />
+            <Form.Control
+              type="text"
+              name="Content"
+              value={comment}
+              onChange={({ target }) => setComment(target.value)}
+            />
           </Form.Group>
           <Button type="submit">Submit</Button>
         </Form>
