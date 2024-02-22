@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import { Button } from 'react-bootstrap'
 
 const BlogInfo = () => {
   const dispatch = useDispatch()
@@ -64,11 +65,11 @@ const BlogInfo = () => {
       <a href={blog.url}>{blog.url}</a>
       <div>
         {blog.likes} Likes
-        <button onClick={updateBlog}>like</button>
+        <Button onClick={updateBlog}>Like</Button>
       </div>
       <div>added by {blog.user.name}</div>
       {blog.user?.name === user?.name ? (
-        <button onClick={removeBlog}>remove</button>
+        <Button variant="danger" onClick={removeBlog}>Remove</Button>
       ) : null}
     </div>
   )

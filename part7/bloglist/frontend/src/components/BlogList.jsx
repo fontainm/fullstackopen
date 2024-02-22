@@ -1,8 +1,6 @@
-import { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import Blog from './Blog'
 import { Table } from 'react-bootstrap'
-import Toggleable from './Toggleable'
 import BlogForm from './BlogForm'
 
 const BlogList = () => {
@@ -13,8 +11,6 @@ const BlogList = () => {
   const user = useSelector((state) => {
     return state.user
   })
-
-  const blogFormRef = useRef()
 
   return (
     <>
@@ -28,11 +24,7 @@ const BlogList = () => {
             ))}
         </tbody>
       </Table>
-      {user !== null ? (
-        <Toggleable buttonLabel="create blog" ref={blogFormRef}>
-          <BlogForm user={user} />
-        </Toggleable>
-      ) : null}
+      {user !== null ? <BlogForm user={user} /> : null}
     </>
   )
 }

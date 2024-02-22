@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 import { Table } from 'react-bootstrap'
 
-const UsersInfo = () => {
+const UserList = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -41,4 +41,4 @@ const UsersInfo = () => {
   )
 }
 
-export default UsersInfo
+export default UserList

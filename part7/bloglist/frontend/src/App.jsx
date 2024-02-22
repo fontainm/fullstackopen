@@ -5,7 +5,7 @@ import Header from './components/Header'
 import Notification from './components/Notification'
 import Home from './components/Home'
 import BlogList from './components/BlogList'
-import UsersInfo from './components/UsersInfo'
+import UserList from './components/UserList'
 import LoginForm from './components/LoginForm'
 import UserInfo from './components/UserInfo'
 import BlogInfo from './components/BlogInfo'
@@ -37,7 +37,7 @@ const App = () => {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/blogs" element={<BlogList />} />
           <Route path="/blogs/:id" element={<BlogInfo />} />
-          <Route path="/users" element={<UsersInfo />} />
+          <Route path="/users" element={<UserList />} />
           <Route path="/users/:id" element={<UserInfo />} />
         </Routes>
       </div>

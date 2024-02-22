@@ -33,7 +33,7 @@ const Header = () => {
             {user ? (
               <>
                 <em> {user.name} logged in</em>
-                <Button onClick={handleLogout}>logout</Button>
+                <Button variant="secondary" onClick={handleLogout}>logout</Button>
               </>
             ) : (
               <Link to="/login">Login</Link>

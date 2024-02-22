@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Form } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
+import Toggleable from './Toggleable'
 
 const BlogForm = ({ user }) => {
   const dispatch = useDispatch()
+  const blogFormRef = useRef()
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState(user.name)
@@ -32,13 +34,14 @@ const BlogForm = ({ user }) => {
       setTitle('')
       setAuthor(user.name)
       setUrl('')
+      blogFormRef.current.toggleVisibility()
     } catch (exception) {
       dispatch(setNotification('Adding new blog failed', 'danger', 5))
     }
   }
 
   return (
-    <>
+    <Toggleable buttonLabel="create blog" ref={blogFormRef}>
       <h2>create new</h2>
       <Form onSubmit={addBlog}>
         <Form.Group>
@@ -79,7 +82,7 @@ const BlogForm = ({ user }) => {
           create
         </Button>
       </Form>
-    </>
+    </Toggleable>
   )
 }
 
