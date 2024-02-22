@@ -8,6 +8,7 @@ const userSlice = createSlice({
   initialState: null,
   reducers: {
     setUser(state, action) {
+      blogService.setToken(action.payload.token)
       return action.payload
     },
   },
@@ -21,7 +22,6 @@ export const loginUser = (credentials) => {
       const user = await loginService.login(credentials)
       dispatch(setUser(user))
       window.localStorage.setItem('blogUser', JSON.stringify(user))
-      blogService.setToken(user.token)
     } catch (exception) {
       const message = exception.response?.data?.error ?? 'Wrong credentials'
       dispatch(setNotification(message, 'error', 5))
