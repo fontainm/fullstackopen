@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Toggleable from './components/Toggleable'
 import BlogForm from './components/BlogForm'
-import UserInfo from './components/UserInfo'
+import Header from './components/Header'
 import UsersInfo from './components/UsersInfo'
+import UserInfo from './components/UserInfo'
 
 import {
   initializeBlogs,
@@ -105,13 +107,17 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Router>
+      <Header />
       <Notification />
-      <UserInfo />
       {user !== null ? blogForm() : null}
-      {blogList()}
-      {<UsersInfo />}
-    </div>
+      <Routes>
+        <Route path="/" />
+        <Route path="/blogs" element={blogList()} />
+        <Route path="/users" element={<UsersInfo />} />
+        <Route path="/users/:id" element={<UserInfo />} />
+      </Routes>
+    </Router>
   )
 }
 

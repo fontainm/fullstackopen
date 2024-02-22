@@ -1,28 +1,35 @@
-import { useSelector, useDispatch } from 'react-redux'
-import LoginForm from './LoginForm'
-import { logoutUser } from '../reducers/userReducer'
+import { useEffect } from 'react'
+import { initializeUsers } from '../reducers/usersReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 const UserInfo = () => {
   const dispatch = useDispatch()
 
-  const user = useSelector((state) => {
-    return state.user
+  useEffect(() => {
+    dispatch(initializeUsers())
+  }, [])
+
+  const users = useSelector((state) => {
+    return state.users
   })
 
-  const handleLogout = (event) => {
-    event.preventDefault()
-    dispatch(logoutUser())
-  }
+  const id = useParams().id
 
-  if (!user) {
-    return <LoginForm />
-  }
+  const user = users.find((user) => user.id === id)
+
+  if (!user) return null
 
   return (
-    <p>
-      {user.name} logged in
-      <button onClick={handleLogout}>logout</button>
-    </p>
+    <>
+      <h2>{user.name}</h2>
+      <h3>blogs added</h3>
+      <ul>
+        {user.blogs.map((blog) => (
+          <li>{blog.title}</li>
+        ))}
+      </ul>
+    </>
   )
 }
 
