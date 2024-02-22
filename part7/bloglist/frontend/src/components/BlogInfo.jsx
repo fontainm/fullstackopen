@@ -61,16 +61,28 @@ const BlogInfo = () => {
 
   return (
     <div className="blog">
-      <h2>{blog.title}</h2>
-      <a href={blog.url}>{blog.url}</a>
       <div>
-        {blog.likes} Likes
-        <Button onClick={updateBlog}>Like</Button>
+        <h2>{blog.title}</h2>
+        <a href={blog.url}>{blog.url}</a>
+        <div>
+          {blog.likes} Likes
+          <Button onClick={updateBlog}>Like</Button>
+        </div>
+        <div>added by {blog.user.name}</div>
+        {blog.user?.name === user?.name ? (
+          <Button variant="danger" onClick={removeBlog}>
+            Remove
+          </Button>
+        ) : null}
       </div>
-      <div>added by {blog.user.name}</div>
-      {blog.user?.name === user?.name ? (
-        <Button variant="danger" onClick={removeBlog}>Remove</Button>
-      ) : null}
+      <div>
+        <h3>Comments</h3>
+        <ul>
+          {blog.comments?.map(comment => (
+            <li>{comment.content}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }
