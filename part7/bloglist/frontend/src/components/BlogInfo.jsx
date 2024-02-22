@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
-import { Button } from 'react-bootstrap'
+import { Form, Button } from 'react-bootstrap'
 
 const BlogInfo = () => {
   const dispatch = useDispatch()
@@ -15,11 +15,11 @@ const BlogInfo = () => {
   const id = useParams().id
   const blog = blogs.find((blog) => blog.id === id)
 
-  if (!blog) return null
-
   const user = useSelector((state) => {
     return state.user
   })
+
+  if (!blog) return null
 
   const updateBlog = (event) => {
     event.preventDefault()
@@ -59,6 +59,19 @@ const BlogInfo = () => {
     dispatch(setNotification(message, type, 5))
   }
 
+  const addComment = (event) => {
+    event.preventDefault()
+    console.log('OK')
+    try {
+      const commentObject = {
+        content: 'OK',
+      }
+      dispatch(createComment(commentObject))
+    } catch (exception) {
+      console.log(exception)
+    }
+  }
+
   return (
     <div className="blog">
       <div>
@@ -78,10 +91,17 @@ const BlogInfo = () => {
       <div>
         <h3>Comments</h3>
         <ul>
-          {blog.comments?.map(comment => (
-            <li>{comment.content}</li>
+          {blog.comments?.map((comment) => (
+            <li key={comment.id}>{comment.content}</li>
           ))}
         </ul>
+        <Form onSubmit={addComment}>
+          <Form.Group>
+            <Form.Label>Content</Form.Label>
+            <Form.Control type="text" name="Content" />
+          </Form.Group>
+          <Button type="submit">Submit</Button>
+        </Form>
       </div>
     </div>
   )
