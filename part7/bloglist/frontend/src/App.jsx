@@ -29,8 +29,8 @@ const App = () => {
 
   return (
     <Router>
-      <div className="container">
-        <Header />
+      <Header />
+      <div className="container mb-3">
         <Notification />
         <Routes>
           <Route path="/" element={<Home />} />

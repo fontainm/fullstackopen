@@ -6,6 +6,7 @@ const Blog = ({ blog }) => {
       <td>
         <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
       </td>
+      <td>{blog.likes}</td>
     </tr>
   )
 }

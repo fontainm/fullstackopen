@@ -1,9 +1,14 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loginUser } from '../reducers/userReducer'
 import { Button, Form } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
+  const user = useSelector((state) => {
+    return state.user
+  })
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -19,6 +24,10 @@ const LoginForm = () => {
     )
     setUsername('')
     setPassword('')
+  }
+
+  if (user) {
+    return <h1>Welcome {user.name}!</h1>
   }
 
   return (

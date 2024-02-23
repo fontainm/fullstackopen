@@ -42,7 +42,7 @@ const BlogForm = ({ user }) => {
 
   return (
     <Toggleable buttonLabel="create blog" ref={blogFormRef}>
-      <h2>create new</h2>
+      <h2>Create new blog</h2>
       <Form onSubmit={addBlog}>
         <Form.Group>
           <Form.Label>Title</Form.Label>

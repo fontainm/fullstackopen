@@ -17,6 +17,10 @@ const BlogList = () => {
       <h2>Blogs</h2>
       <Table striped>
         <tbody>
+          <tr>
+            <th>Title</th>
+            <th>Likes</th>
+          </tr>
           {blogs
             // .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
