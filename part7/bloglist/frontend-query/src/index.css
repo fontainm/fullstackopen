@@ -1,27 +1,17 @@
-.navbar .nav-link a {
-  text-decoration: none;
-  color: white;
-  transition: all 0.3s ease;
+.notification {
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-.navbar .nav-link a:hover {
-  color: grey;
+.success {
+  color: green;
 }
 
-.navbar .nav-link {
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-}
-
-.navbar {
-  margin-bottom: 1rem;
-}
-
-.navbar .btn {
-  margin-left: 1rem;
-}
-
-.btn {
-  text-transform: uppercase;
+.error {
+  color: red;
 }

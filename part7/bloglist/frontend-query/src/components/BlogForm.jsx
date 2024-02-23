@@ -1,52 +1,30 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Form } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
-import { setNotification } from '../reducers/notificationReducer'
-import { createBlog } from '../reducers/blogReducer'
-import Toggleable from './Toggleable'
 
-const BlogForm = ({ user }) => {
-  const dispatch = useDispatch()
-  const blogFormRef = useRef()
-
+const BlogForm = ({ createBlog, user }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState(user.name)
   const [url, setUrl] = useState('')
 
   const addBlog = (event) => {
     event.preventDefault()
-    const blogObject = {
+    createBlog({
       title,
       author,
       url,
-    }
-
-    try {
-      dispatch(createBlog(blogObject))
-      dispatch(
-        setNotification(
-          `New blog added: ${blogObject.title} by ${blogObject.author}`,
-          'success',
-          5
-        )
-      )
-      setTitle('')
-      setAuthor(user.name)
-      setUrl('')
-      blogFormRef.current.toggleVisibility()
-    } catch (exception) {
-      dispatch(setNotification('Adding new blog failed', 'danger', 5))
-    }
+    })
+    setTitle('')
+    setAuthor(user.name)
+    setUrl('')
   }
 
   return (
-    <Toggleable buttonLabel="create blog" ref={blogFormRef}>
-      <h2>Create new blog</h2>
-      <Form onSubmit={addBlog}>
-        <Form.Group>
-          <Form.Label>Title</Form.Label>
-          <Form.Control
+    <>
+      <h2>create new</h2>
+      <form onSubmit={addBlog}>
+        <div>
+          title
+          <input
             id="title"
             type="text"
             value={title}
@@ -54,11 +32,10 @@ const BlogForm = ({ user }) => {
             placeholder="Title"
             onChange={({ target }) => setTitle(target.value)}
           />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>Author</Form.Label>
-
-          <Form.Control
+        </div>
+        <div>
+          author
+          <input
             id="author"
             type="text"
             value={author}
@@ -66,10 +43,10 @@ const BlogForm = ({ user }) => {
             placeholder="Author"
             onChange={({ target }) => setAuthor(target.value)}
           />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>URL</Form.Label>
-          <Form.Control
+        </div>
+        <div>
+          url
+          <input
             id="url"
             type="text"
             value={url}
@@ -77,16 +54,17 @@ const BlogForm = ({ user }) => {
             placeholder="URL"
             onChange={({ target }) => setUrl(target.value)}
           />
-        </Form.Group>
-        <Button id="create-button" type="submit">
+        </div>
+        <button id="create-button" type="submit">
           create
-        </Button>
-      </Form>
-    </Toggleable>
+        </button>
+      </form>
+    </>
   )
 }
 
 BlogForm.propTypes = {
+  createBlog: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
 }
 
