@@ -1,0 +1,27 @@
+.navbar .nav-link a {
+  text-decoration: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.navbar .nav-link a:hover {
+  color: grey;
+}
+
+.navbar .nav-link {
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+}
+
+.navbar {
+  margin-bottom: 1rem;
+}
+
+.navbar .btn {
+  margin-left: 1rem;
+}
+
+.btn {
+  text-transform: uppercase;
+}
