@@ -10,6 +10,8 @@ const schema = new mongoose.Schema({
   },
   born: {
     type: Number,
+    min: 0,
+    max: 2024
   },
 })
 

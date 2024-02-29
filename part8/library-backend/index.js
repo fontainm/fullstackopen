@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 const Book = require('./models/book')
 const Author = require('./models/author')
+const { GraphQLError } = require('graphql')
 
 require('dotenv').config()
 
@@ -88,27 +89,55 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
-      console.log(root, args)
       let authorId
       const author = await Author.findOne({ name: args.author })
       if (!author) {
-        console.log('must save')
         const newAuthor = new Author({ name: args.author })
-        await newAuthor.save()
+        try {
+          await newAuthor.save()
+        } catch (error) {
+          throw new GraphQLError('Adding author failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.author,
+              error,
+            },
+          })
+        }
         authorId = newAuthor._id
       } else {
         authorId = author._id
       }
-      console.log(authorId)
       const book = new Book({ ...args, author: authorId })
 
-      return book.save()
+      try {
+        await book.save()
+      } catch (error) {
+        throw new GraphQLError('Adding book failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.title,
+            error,
+          },
+        })
+      }
+      return book
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name })
-      if (!author) return null
       author.born = args.setBornTo
-      return author.save()
+      try {
+        await author.save()
+      } catch (error) {
+        throw new GraphQLError('Updating birthyear failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.setBornTo,
+            error,
+          },
+        })
+      }
+      return author
     },
   },
 }
