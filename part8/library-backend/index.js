@@ -105,6 +105,12 @@ const resolvers = {
       return context.currentUser
     },
   },
+  Book: {
+    author: async (root) => {
+      const author = await Author.findById(root.author)
+      return author
+    },
+  },
   Author: {
     bookCount: async (root) => {
       return 0
