@@ -17,7 +17,6 @@ const Books = () => {
 
   if (genre) {
     books = books.filter((book) => book.genres?.includes(genre))
-    console.log(books)
   }
 
   return (
