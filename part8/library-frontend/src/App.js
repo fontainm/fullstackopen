@@ -7,7 +7,7 @@ import Recommendations from './components/Recommendations'
 import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { useApolloClient, useSubscription } from '@apollo/client'
-import { ALL_BOOKS, BOOK_ADDED } from './queries'
+import { ALL_BOOKS_BY_GENRE, BOOK_ADDED } from './queries'
 
 export const updateCache = (cache, query, addedBook) => {
   const uniqByTitle = (a) => {
@@ -39,7 +39,11 @@ const App = () => {
   useSubscription(BOOK_ADDED, {
     onData: ({ data, client }) => {
       const addedBook = data.data.bookAdded
-      updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
+      updateCache(
+        client.cache,
+        { query: ALL_BOOKS_BY_GENRE, variables: { genre: '' } },
+        addedBook
+      )
     },
   })
 
