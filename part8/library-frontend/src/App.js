@@ -6,7 +6,8 @@ import Recommendations from './components/Recommendations'
 
 import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
+import { BOOK_ADDED } from './queries'
 
 const App = () => {
   const client = useApolloClient()
@@ -18,6 +19,12 @@ const App = () => {
       setToken(userToken)
     }
   }, [])
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      console.log(data)
+    },
+  })
 
   const logout = () => {
     setToken(null)
