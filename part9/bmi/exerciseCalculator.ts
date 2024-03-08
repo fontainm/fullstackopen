@@ -1,4 +1,14 @@
-const calculateExercises = (hours) => {
+interface Exercise {
+  periodLength: number
+  trainingDays: number
+  success: boolean
+  rating: number
+  ratingDescription: string
+  target: number
+  average: number
+}
+
+const calculateExercises = (hours: Array<number>): Exercise => {
   return {
     periodLength: 7,
     trainingDays: 5,
