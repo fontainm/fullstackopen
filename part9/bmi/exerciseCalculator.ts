@@ -10,7 +10,15 @@ interface Exercise {
   average: number
 }
 
-const calculateExercises = (hours: Array<number>, target: number): Exercise => {
+export type ExerciseHours = {
+  daily_exercises: Array<number>
+  target: number
+}
+
+export const calculateExercises = (
+  hours: Array<number>,
+  target: number
+): Exercise => {
   const periodLength = hours.length
   const trainingDays = hours.filter((hour) => hour > 0).length
   const sum = hours.reduce((a, b) => a + b, 0)
