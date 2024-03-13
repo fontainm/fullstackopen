@@ -1,7 +1,11 @@
 import patientData from '../data/patients';
 
-const getPatients = () => {
-  return patientData;
+import { Patient } from '../types';
+
+const patients: Patient[] = patientData;
+
+const getPatients = (): Patient[] => {
+  return patients;
 };
 
 const addPatient = () => {
