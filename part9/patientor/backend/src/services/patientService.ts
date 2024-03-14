@@ -1,4 +1,4 @@
-import { v1 as uuid } from 'uuid'
+import { v1 as uuid } from 'uuid';
 
 import patientData from '../data/patients';
 
