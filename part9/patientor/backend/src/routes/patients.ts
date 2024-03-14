@@ -7,8 +7,17 @@ router.get('/', (_req, res) => {
   res.send(patientService.getNonSensitivePatients());
 });
 
-router.post('/', (_req, res) => {
-  res.send('Saving a patient!');
+router.post('/', (req, res) => {
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+  const { name, dateOfBirth, gender, ssn, occupation } = req.body;
+  const addedPatient = patientService.addPatient({
+    name,
+    dateOfBirth,
+    gender,
+    ssn,
+    occupation,
+  });
+  res.json(addedPatient);
 });
 
 export default router;
