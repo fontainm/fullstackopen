@@ -1,24 +1,16 @@
-interface Exercise {
-  name: string;
-  exerciseCount: number;
-}
+import { CoursePart } from '../types';
+import Part from './Part';
 
 interface ContentProps {
-  parts: Array<Exercise>;
+  parts: Array<CoursePart>;
 }
 
 const Content = (props: ContentProps): JSX.Element => {
   return (
     <>
-      <p>
-        {props.parts[0].name} {props.parts[0].exerciseCount}
-      </p>
-      <p>
-        {props.parts[1].name} {props.parts[1].exerciseCount}
-      </p>
-      <p>
-        {props.parts[2].name} {props.parts[2].exerciseCount}
-      </p>
+      {props.parts.map((part, index) => (
+        <Part key={index} part={part} />
+      ))}
     </>
   );
 };
