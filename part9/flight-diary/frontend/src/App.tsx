@@ -1,13 +1,9 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-
-interface DiaryEntry {
-  id: number;
-  date: string;
-  weather: string;
-  visibility: string;
-  comment: string;
-}
+import { DiaryEntry } from './types';
+import {
+  getAllDiaryEntries,
+  createDiaryEntry,
+} from './services/diaryEntryService';
 
 function App() {
   const [diaryEntries, setDiaryEntries] = useState<DiaryEntry[]>([]);
@@ -17,11 +13,9 @@ function App() {
   const [newComment, setNewComment] = useState('');
 
   useEffect(() => {
-    axios
-      .get<DiaryEntry[]>('http://localhost:3000/api/diaries')
-      .then((response) => {
-        setDiaryEntries(response.data);
-      });
+    getAllDiaryEntries().then((data) => {
+      setDiaryEntries(data);
+    });
   }, []);
 
   const diaryEntryCreation = (event: React.SyntheticEvent) => {
@@ -34,11 +28,9 @@ function App() {
       comment: newComment,
     };
 
-    axios
-      .post<DiaryEntry>('http://localhost:3000/api/diaries', diaryEntryToAdd)
-      .then((response) => {
-        setDiaryEntries(diaryEntries.concat(response.data));
-      });
+    createDiaryEntry(diaryEntryToAdd).then((data) => {
+      setDiaryEntries(diaryEntries.concat(data));
+    });
 
     setNewDate('');
     setNewVisibility('');
