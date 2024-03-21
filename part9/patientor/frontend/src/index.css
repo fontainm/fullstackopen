@@ -16,6 +16,14 @@ div.entry {
   border-radius: 6px;
 }
 
+div.entry.new {
+  border-color: orange;
+}
+
+div.entry.new form > div {
+  margin-bottom: 0.5rem;
+}
+
 svg.heart {
   fill: red;
 }

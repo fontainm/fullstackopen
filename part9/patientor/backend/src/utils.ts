@@ -1,4 +1,10 @@
-import { NewPatient, Gender, EntryWithoutId, Diagnosis } from './types';
+import {
+  NewPatient,
+  Gender,
+  EntryWithoutId,
+  Diagnosis,
+  HealthCheckRating,
+} from './types';
 
 const toNewPatient = (object: unknown): NewPatient => {
   if (!object || typeof object !== 'object') {
@@ -92,8 +98,10 @@ export const toNewEntry = (object: unknown): EntryWithoutId => {
       date: parseDateOfBirth(object.date),
       // @ts-expect-error
       type: parseType(object),
-      specialist: parseString(object.specialist),
-      description: parseString(object.description),
+      specialist: parseSpecialist(object.specialist),
+      description: parseDescription(object.description),
+      // @ts-expect-error
+      healthCheckRating: parseHealthCheckRating(object.healthCheckRating),
       diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes),
     };
 
@@ -114,11 +122,33 @@ const parseType = (object: object): string => {
   return object.type;
 };
 
-const parseString = (text: unknown): string => {
+const parseSpecialist = (text: unknown): string => {
   if (!text || !isString(text)) {
-    throw new Error('Incorrect text');
+    throw new Error('Incorrect specialist');
   }
   return text;
+};
+
+const parseDescription = (text: unknown): string => {
+  if (!text || !isString(text)) {
+    throw new Error('Incorrect description');
+  }
+  return text;
+};
+
+const parseHealthCheckRating = (rating: unknown): HealthCheckRating => {
+  if (!rating) {
+    throw new Error('Rating missing!');
+  }
+  const ratingNumber = Number(rating);
+  if (isNaN(ratingNumber) || !isHealthCheckRating(ratingNumber)) {
+    throw new Error('Invalid rating!');
+  }
+  return ratingNumber;
+};
+
+const isHealthCheckRating = (param: number): param is HealthCheckRating => {
+  return Object.values(HealthCheckRating).includes(param);
 };
 
 const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {

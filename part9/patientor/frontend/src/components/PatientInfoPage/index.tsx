@@ -1,12 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import { Patient } from '../../types';
+import { Entry, Patient } from '../../types';
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import patientService from '../../services/patients';
 import EntryDetails from '../EntryDetails';
+import AddEntryForm from '../AddEntryForm';
 
 const PatientInfoPage = () => {
   const [patient, setPatient] = useState<Patient>();
@@ -26,6 +27,10 @@ const PatientInfoPage = () => {
   if (!patient) {
     return null;
   }
+
+  const addEntry = (newEntry: Entry) => {
+    setPatient({ ...patient, entries: patient.entries.concat(newEntry) });
+  };
 
   let genderIcon;
 
@@ -49,6 +54,7 @@ const PatientInfoPage = () => {
       </h2>
       <p>ssn: {patient.ssn}</p>
       <p>occupation: {patient.occupation}</p>
+      <AddEntryForm patient={patient} onAdd={addEntry} />
       <h3>entries</h3>
       {patient.entries.map((entry) => (
         <EntryDetails entry={entry} key={entry.date} />
