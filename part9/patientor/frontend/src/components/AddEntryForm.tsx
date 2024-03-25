@@ -3,16 +3,20 @@ import { SyntheticEvent, useState } from 'react';
 import patientService from '../services/patients';
 import { Patient, EntryWithoutId, Entry } from '../types';
 import axios from 'axios';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 interface Props {
   patient: Patient;
   onAdd: (values: Entry) => void;
 }
 
+const now = dayjs();
+
 const AddEntryForm = ({ patient, onAdd }: Props) => {
   const [error, setError] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(now);
   const [specialist, setSpecialist] = useState('');
   const [rating, setRating] = useState('');
   const [diagnosis, setDiagnosis] = useState('');
@@ -35,7 +39,7 @@ const AddEntryForm = ({ patient, onAdd }: Props) => {
       const entry: Entry = await patientService.createEntry(patient, newEntry);
 
       setDescription('');
-      setDate('');
+      setDate(now);
       setSpecialist('');
       setRating('');
       setDiagnosis('');
@@ -71,11 +75,10 @@ const AddEntryForm = ({ patient, onAdd }: Props) => {
           value={description}
           onChange={({ target }) => setDescription(target.value)}
         />
-        <TextField
+        <DatePicker
           label="Date"
-          fullWidth
           value={date}
-          onChange={({ target }) => setDate(target.value)}
+          onChange={(newDate) => setDate(newDate ?? dayjs())}
         />
         <TextField
           label="Specialist"
