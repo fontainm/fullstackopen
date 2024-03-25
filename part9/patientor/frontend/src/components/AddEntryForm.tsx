@@ -6,10 +6,19 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Autocomplete,
 } from '@mui/material';
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import patientService from '../services/patients';
-import { Patient, EntryWithoutId, Entry, HealthCheckRating } from '../types';
+import diagnosisService from '../services/diagnoses';
+
+import {
+  Patient,
+  EntryWithoutId,
+  Entry,
+  HealthCheckRating,
+  Diagnosis,
+} from '../types';
 import axios from 'axios';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
@@ -23,18 +32,28 @@ const now = dayjs();
 
 const AddEntryForm = ({ patient, onAdd }: Props) => {
   const [error, setError] = useState('');
+
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(now);
   const [specialist, setSpecialist] = useState('');
   const [rating, setRating] = useState('');
-  const [diagnosis, setDiagnosis] = useState('');
+  const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis[]>([]);
+
+  useEffect(() => {
+    const fetchDiagnosesList = async () => {
+      const diagnoses = await diagnosisService.getAll();
+      setDiagnoses(diagnoses);
+    };
+    void fetchDiagnosesList();
+  }, []);
 
   const addEntry = async (event: SyntheticEvent) => {
     event.preventDefault();
     setError('');
     const healthCheckRating: HealthCheckRating =
       HealthCheckRating[rating as keyof typeof HealthCheckRating];
-    const diagnosisCodes = diagnosis.split(',');
 
     try {
       const newEntry: EntryWithoutId = {
@@ -43,7 +62,7 @@ const AddEntryForm = ({ patient, onAdd }: Props) => {
         date: date.toString(),
         specialist,
         healthCheckRating,
-        diagnosisCodes,
+        diagnosisCodes: diagnosisCodes.map((d) => d.code),
       };
       const entry: Entry = await patientService.createEntry(patient, newEntry);
 
@@ -51,7 +70,7 @@ const AddEntryForm = ({ patient, onAdd }: Props) => {
       setDate(now);
       setSpecialist('');
       setRating('');
-      setDiagnosis('');
+      setDiagnosisCodes([]);
 
       onAdd(entry);
     } catch (e: unknown) {
@@ -110,11 +129,18 @@ const AddEntryForm = ({ patient, onAdd }: Props) => {
               ))}
           </Select>
         </FormControl>
-        <TextField
-          label="Diagnosis codes"
-          fullWidth
-          value={diagnosis}
-          onChange={({ target }) => setDiagnosis(target.value)}
+        <Autocomplete
+          multiple
+          id="diagnosesinput"
+          options={diagnoses}
+          getOptionLabel={(option: Diagnosis) => option.code}
+          renderInput={(params) => (
+            <TextField {...params} label="Diagnosis codes" />
+          )}
+          value={diagnosisCodes}
+          onChange={(_event, diagnosis: Diagnosis) => {
+            setDiagnosisCodes([...diagnosis]);
+          }}
         />
         <Button type="submit" variant="contained">
           Add Entry
