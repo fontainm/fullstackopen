@@ -1,7 +1,15 @@
-import { Alert, Button, TextField } from '@mui/material';
+import {
+  Alert,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from '@mui/material';
 import { SyntheticEvent, useState } from 'react';
 import patientService from '../services/patients';
-import { Patient, EntryWithoutId, Entry } from '../types';
+import { Patient, EntryWithoutId, Entry, HealthCheckRating } from '../types';
 import axios from 'axios';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
@@ -24,14 +32,15 @@ const AddEntryForm = ({ patient, onAdd }: Props) => {
   const addEntry = async (event: SyntheticEvent) => {
     event.preventDefault();
     setError('');
-    const healthCheckRating = +rating;
+    const healthCheckRating: HealthCheckRating =
+      HealthCheckRating[rating as keyof typeof HealthCheckRating];
     const diagnosisCodes = diagnosis.split(',');
 
     try {
       const newEntry: EntryWithoutId = {
         type: 'HealthCheck',
         description,
-        date,
+        date: date.toString(),
         specialist,
         healthCheckRating,
         diagnosisCodes,
@@ -86,12 +95,21 @@ const AddEntryForm = ({ patient, onAdd }: Props) => {
           value={specialist}
           onChange={({ target }) => setSpecialist(target.value)}
         />
-        <TextField
-          label="HealthCheck Rating"
-          fullWidth
-          value={rating}
-          onChange={({ target }) => setRating(target.value)}
-        />
+        <FormControl fullWidth>
+          <InputLabel>HealthCheck Rating</InputLabel>
+          <Select
+            value={rating}
+            onChange={({ target }) => setRating(target.value)}
+          >
+            {Object.values(HealthCheckRating)
+              .filter((v) => isNaN(Number(v)))
+              .map((rating) => (
+                <MenuItem key={rating} value={rating}>
+                  {rating}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
         <TextField
           label="Diagnosis codes"
           fullWidth
